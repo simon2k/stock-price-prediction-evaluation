@@ -21,11 +21,7 @@ Steps:
 | Linear | 97.557% | 19.318 | 472.715 | 21.742 |
 | Lasso  | 96.156% | 19.406 | 476.549 | 21.83 |
 
-In the next three paragraphs is placed a comparison between Linear, KNN and Lasso regression.
-
-### Linear regression
-
-![linear-regresssion](./assets/Linear%20Regression.png)
+In the next three paragraphs you can find predictions using KNN, Linear, and Lasso regression models.
 
 ### KNN regression
 
@@ -33,6 +29,10 @@ Settings:
 - Neighbors: 4
 
 ![knn-regresssion](./assets/KNN%20regression.png)
+
+### Linear regression
+
+![linear-regresssion](./assets/Linear%20Regression.png)
 
 ### Lasso regression
 
