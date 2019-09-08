@@ -12,6 +12,15 @@ Steps:
 
 ## Evaluation
 
+
+### Comparison
+
+| Method | Confidence | Mean Absolute Error | Mean Squared Error | Root Mean Squared Error |
+| :---: | ---: | ---: | ---: | ---: |
+| KNN    | 97.162% | 9.581 | 137.833 | 11.74 |
+| Linear | 97.557% | 19.318 | 472.715 | 21.742 |
+| Lasso  | 96.156% | 19.406 | 476.549 | 21.83 |
+
 In the next three paragraphs is placed a comparison between Linear, KNN and Lasso regression.
 
 ### Linear regression
@@ -32,8 +41,3 @@ Settings:
 
 ![lasso-regression](./assets/Lasso%20regression.png)
 
-## Confidences comparison
-
-- Linear regression: 0.97065
-- KNN regression:    0.98265
-- Lasso regression:  0.97064

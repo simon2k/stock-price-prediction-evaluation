@@ -6,6 +6,7 @@ from sklearn.preprocessing import scale
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 df = pd.read_csv('./data/AAPL.csv', index_col='Date', parse_dates=True)
 
@@ -149,14 +150,101 @@ plt.figure()
 lasso_df_regularized_forecast.iloc[-200:]['Adj Close'].plot()
 lasso_df_regularized_forecast.iloc[-200:]['Forecast'].plot()
 plt.title('Lasso Regression')
-plt.show()
+# plt.show()
 
 print('Confidences: ')
-print('- Linear regression: ', round(linear_regression_confidence, 5))
-print('- KNN regression: ', round(knn_confidence, 5))
-print('- Lasso regression: ', round(lasso_confidence, 5))
+print('- Linear regression: ', round(linear_regression_confidence * 100., 3), '%')
+print('- KNN regression: ', round(knn_confidence * 100., 3), '%')
+print('- Lasso regression: ', round(lasso_confidence * 100., 3), '%')
 
-# Confidences:
-# - Linear regression: 0.97065
-# - KNN regression:    0.98265
-# - Lasso regression:  0.97064
+print(lr_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+      lr_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'])
+
+print('\nMean Absolute Error:')
+print('- Linear regression: ',
+      round(
+          mean_absolute_error(
+              lr_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+              lr_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
+          ),
+          3
+      ))
+print('- KNN regression: ',
+      round(
+          mean_absolute_error(
+
+              knn_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+              knn_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
+          ),
+          3))
+print('- Lasso regression: ',
+      round(
+          mean_absolute_error(
+              lasso_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+              lasso_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
+          ),
+          3))
+
+
+print('\nMean Squared Error:')
+print('- Linear regression: ',
+      round(
+          mean_squared_error(
+              lr_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+              lr_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
+          ),
+          3
+      ))
+print('- KNN regression: ',
+      round(
+          mean_squared_error(
+              knn_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+              knn_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
+          ),
+          3))
+print('- Lasso regression: ',
+      round(
+          mean_squared_error(
+              lasso_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+              lasso_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
+          ),
+          3))
+
+print('\nRoot Mean Squared Error:')
+print('- Linear regression: ',
+      round(
+          np.sqrt(mean_squared_error(
+              lr_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+              lr_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
+          )),
+          3
+      ))
+print('- KNN regression: ',
+      round(
+          np.sqrt(mean_squared_error(
+              knn_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+              knn_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
+          )),
+          3))
+print('- Lasso regression: ',
+      round(
+          np.sqrt(mean_squared_error(
+              lasso_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
+              lasso_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
+          )),
+          3))
+
+# Mean Absolute Error:
+# - Linear regression:  19.318
+# - KNN regression:  9.581
+# - Lasso regression:  19.406
+#
+# Mean Squared Error:
+# - Linear regression:  472.715
+# - KNN regression:  137.833
+# - Lasso regression:  476.549
+#
+# Root Mean Squared Error:
+# - Linear regression:  21.742
+# - KNN regression:  11.74
+# - Lasso regression:  21.83
