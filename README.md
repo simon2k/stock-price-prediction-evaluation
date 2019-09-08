@@ -12,21 +12,24 @@ Steps:
 
 ## Evaluation
 
-
 ### Comparison
 
 | Method | Confidence | Mean Absolute Error | Mean Squared Error | Root Mean Squared Error |
 | :---: | ---: | ---: | ---: | ---: |
-| KNN    | 97.162% | 9.581 | 137.833 | 11.74 |
-| Linear | 97.557% | 19.318 | 472.715 | 21.742 |
-| Lasso  | 96.156% | 19.406 | 476.549 | 21.83 |
+| KNN    | 98.372% |  3.602 |  21.156 |  4.6 |
+| Linear | 97.116% |  9.241 |  114.052 |  10.68 |
+| Lasso  | 97.124% |  9.544 |  121.564 |  11.026 |
+
+#### Moving Average for Adj Close
+
+![moving-average-for-adj-close](./assets/moving-avergage-for-adj-close.png)
 
 In the next three paragraphs you can find predictions using KNN, Linear, and Lasso regression models.
 
 ### KNN regression
 
 Settings:
-- Neighbors: 4
+- Neighbors: 2
 
 ![knn-regresssion](./assets/KNN%20regression.png)
 
@@ -37,7 +40,7 @@ Settings:
 ### Lasso regression
 
 Settings:
-- Alpha: 0.05
+- Alpha: 0.1
 
 ![lasso-regression](./assets/Lasso%20regression.png)
 

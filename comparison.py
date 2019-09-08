@@ -21,13 +21,32 @@ df = df.ffill()
 
 print('\nNull rows count: ', df.isnull().T.any().T.sum())
 
-# Feature engineering
+# === Feature engineering ===
+
 df_regularized = df.loc[:, ['Adj Close', 'Volume']]
 # High-Low Percentage
 df_regularized['HL Pct'] = (df['High'] - df['Low']) / df['Close'] * 100.
 # Percentage Change
 df_regularized['Pct Change'] = (df['Close'] - df['Open']) / df['Open'] * 100.
+
+# Moving Avg
+MOVING_AVERAGE_PERIOD = 200
+MIN_PERIODS = 30
+df_regularized['Moving Average'] = df_regularized['Adj Close'].rolling(MOVING_AVERAGE_PERIOD,
+                                                                       min_periods=MIN_PERIODS).mean()
+df_regularized.dropna(inplace=True)
 print('\nDF Regularized:\n', df_regularized.tail())
+
+df_regularized.filter(['HL Pct', 'Pct Change']).plot()
+plt.legend()
+
+df_regularized.filter(['Adj Close', 'Moving Average']).plot()
+plt.legend()
+
+plt.figure()
+df_regularized['Volume'].plot()
+plt.legend()
+plt.show()
 
 # Data for forecast:
 forecast_rows = math.ceil(0.01 * len(df_regularized))
@@ -55,7 +74,7 @@ df_regularized.dropna(inplace=True)
 y = np.array(df_regularized['label'])
 
 # Display first 10 Xs (independent variable) and ys (dependent variable)
-print('X: ', X[:10])
+print('X: ', X[:40])
 print('y: ', y[:10])
 print('df_regularized:\n', df_regularized.head())
 
@@ -101,7 +120,7 @@ plt.title('Linear Regression')
 # ==== KNN Regression ====
 #
 
-knn_model = KNeighborsRegressor(n_neighbors=4)
+knn_model = KNeighborsRegressor(n_neighbors=2)
 knn_model.fit(X_train, y_train)
 
 # Display confidence
@@ -128,7 +147,7 @@ plt.title('KNN Regression')
 # ==== Lasso Regression ====
 #
 
-lasso_model = Lasso(alpha=0.05)
+lasso_model = Lasso(alpha=0.1)
 lasso_model.fit(X_train, y_train)
 
 # Display confidence
@@ -150,15 +169,12 @@ plt.figure()
 lasso_df_regularized_forecast.iloc[-200:]['Adj Close'].plot()
 lasso_df_regularized_forecast.iloc[-200:]['Forecast'].plot()
 plt.title('Lasso Regression')
-# plt.show()
+plt.show()
 
 print('Confidences: ')
 print('- Linear regression: ', round(linear_regression_confidence * 100., 3), '%')
 print('- KNN regression: ', round(knn_confidence * 100., 3), '%')
 print('- Lasso regression: ', round(lasso_confidence * 100., 3), '%')
-
-print(lr_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close'],
-      lr_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'])
 
 print('\nMean Absolute Error:')
 print('- Linear regression: ',
@@ -184,7 +200,6 @@ print('- Lasso regression: ',
               lasso_df_regularized_forecast.iloc[-forecast_rows:]['Forecast'],
           ),
           3))
-
 
 print('\nMean Squared Error:')
 print('- Linear regression: ',
