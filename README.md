@@ -1,6 +1,6 @@
 # Stock Price Prediction Evaluation
 
-This project is indented to present a small evaluation of different types of regression models for predicting stock prices for AAPL. It is focused on a simple linear, KNN and lasso regression models.
+This project is indented to present a small evaluation of different types of regression models for predicting stock prices for [AAPL](https://finance.yahoo.com/quote/AAPL/history?p=AAPL). It is focused on a simple linear, KNN and lasso regression models.
 
 ## Setup
 
