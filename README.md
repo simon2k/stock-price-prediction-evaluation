@@ -14,19 +14,37 @@ Steps:
 
 ### Comparison
 
+#### Models sorted by confidence
+
 | Method | Confidence | Mean Absolute Error | Mean Squared Error | Root Mean Squared Error |
 | :---: | ---: | ---: | ---: | ---: |
-| Linear | 96.54% | 9.267 | 114.54 | 3.044 |
-| KNN | 98.39% | 3.717 | 23.151 | 1.928 |
-| Lasso | 96.55% | 9.567 | 122.002 | 3.093 |
-| Ridge | 96.54% | 9.261 | 114.403 | 3.043 |
-| Ridge CV | 96.54% | 9.261 | 114.403 | 3.043 |
-| Kernel Ridge | 60.8% | 41.406 | 1762.293 | 6.435 |
-| Elastic Net | 96.47% | 8.639 | 100.439 | 2.939 |
-| Elastic Net CV | 96.54% | 9.04 | 109.289 | 3.007 |
-| Bayesian Ridge | 96.54% | 9.253 | 114.217 | 3.042 |
-| Orthogonal Matching Pursuit | 96.4% | 18.776 | 448.374 | 4.333 |
-| Orthogonal Matching Pursuit CV | 96.54% | 9.268 | 114.556 | 3.044 |
+| Orthogonal Matching Pursuit | 99.9644% | 12.944 | 251.349 | 3.598 |
+| Orthogonal Matching Pursuit CV | 99.9644% | 12.944 | 251.362 | 3.598 |
+| Linear | 99.9641% | 12.898 | 249.516 | 3.591 |
+| Bayesian Ridge | 99.9641% | 12.898 | 249.513 | 3.591 |
+| Ridge CV | 99.9641% | 12.897 | 249.494 | 3.591 |
+| Ridge | 99.9641% | 12.892 | 249.295 | 3.591 |
+| Elastic Net CV | 99.9639% | 12.876 | 248.647 | 3.588 |
+| Lasso | 99.9634% | 13.116 | 259.209 | 3.622 |
+| KNN | 99.7029% | 13.293 | 254.76 | 3.646 |
+| Elastic Net | 99.4877% | 12.879 | 218.512 | 3.589 |
+| Kernel Ridge | 71.8265% | 40.886 | 1778.924 | 6.394 |
+
+#### Models sorted by RMSE
+
+| Method | Confidence | Mean Absolute Error | Mean Squared Error | Root Mean Squared Error |
+| :---: | ---: | ---: | ---: | ---: |
+| Elastic Net CV | 99.9639% | 12.876 | 248.647 | 3.588268 |
+| Elastic Net | 99.4877% | 12.879 | 218.512 | 3.588714 |
+| Ridge | 99.9641% | 12.892 | 249.295 | 3.590572 |
+| Ridge CV | 99.9641% | 12.897 | 249.494 | 3.591279 |
+| Bayesian Ridge | 99.9641% | 12.898 | 249.513 | 3.591345 |
+| Linear | 99.9641% | 12.898 | 249.516 | 3.591357 |
+| Orthogonal Matching Pursuit CV | 99.9644% | 12.944 | 251.362 | 3.597757 |
+| Orthogonal Matching Pursuit | 99.9644% | 12.944 | 251.349 | 3.597776 |
+| Lasso | 99.9634% | 13.116 | 259.209 | 3.621619 |
+| KNN | 99.7029% | 13.293 | 254.76 | 3.646022 |
+| Kernel Ridge | 71.8265% | 40.886 | 1778.924 | 6.394188 |
 
 #### Moving Average for Adj Close
 

@@ -9,6 +9,7 @@ from sklearn.kernel_ridge import KernelRidge
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+from operator import itemgetter
 
 df = pd.read_csv('./data/AAPL.csv', index_col='Date', parse_dates=True)
 
@@ -50,43 +51,24 @@ df_regularized.dropna(inplace=True)
 # plt.legend()
 # plt.show()
 
-# Data for forecast:
-forecast_rows = math.ceil(0.01 * len(df_regularized))
-# print('\nTest rows: ', forecast_rows, ' out of: ', len(df_regularized))
-
+DAYS_TO_FORECAST = 50  # Last N days to predict based on historical data
 FORECASTING_COLUMN = 'Adj Close'
-df_regularized['label'] = df_regularized[FORECASTING_COLUMN].shift(-forecast_rows)
+df_regularized['label'] = df_regularized[FORECASTING_COLUMN].shift(-1)
 
-# Remove empty values after shifting the column data
-df_regularized_forecast = df_regularized.copy()
+df_regularized_train = df_regularized.copy()
+df_regularized_train.dropna(inplace=True)
 
-# Display the head
-# print('df_regularized:\n', df_regularized.head())
-
-# drop - returns all columns except specified ones in the list
-X = np.array(df_regularized.drop(['label'], 'columns'))
+X = np.array(df_regularized_train.drop(['label'], 'columns'))
 # Rescale X for regression
 X = scale(X)
-X = X[:-forecast_rows]
-X_forecast = X[-forecast_rows:]
+X = X[:-DAYS_TO_FORECAST]
+y = np.array(df_regularized_train['label'][:-DAYS_TO_FORECAST])
 
-df_regularized.dropna(inplace=True)
-
-# Assign labels
-y = np.array(df_regularized['label'])
-
-# Display first 10 Xs (independent variable) and ys (dependent variable)
-# print('X: ', X[:40])
-# print('y: ', y[:10])
-# print('df_regularized:\n', df_regularized.head())
+# Prepare data for forecasting
+X_forecast = X[-DAYS_TO_FORECAST:]
 
 # Split data into train & test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.1)
-
-# Verify the data
-# print('X train: ', X_train.shape, X_train[:10])
-# print('is X train finite: ', np.isfinite(X_train).all())
-# print('is y train finite: ', np.isfinite(y_train).all())
 
 models_summary = []
 
@@ -94,23 +76,23 @@ models_summary = []
 def evaluate_model(model_name, model):
     model.fit(X_train, y_train)
 
-    # Display confidence
+    # Get confidence
     model_confidence = model.score(X_test, y_test)
 
-    # Prediction
+    # Get forecast
     y_forecast = model.predict(X_forecast)
 
     # Assign default NaN predictions
-    model_df_regularized_forecast = df_regularized_forecast.copy()
+    model_df_regularized_forecast = df_regularized.copy()
     model_df_regularized_forecast['Forecast'] = np.nan
 
     for idx, y_f in enumerate(y_forecast):
-        model_df_regularized_forecast.iloc[-forecast_rows + idx] = list(
-            model_df_regularized_forecast.drop('Forecast', 'columns').iloc[-forecast_rows + idx].values) + [y_f]
+        model_df_regularized_forecast.iloc[-DAYS_TO_FORECAST + idx] = list(
+            model_df_regularized_forecast.drop('Forecast', 'columns').iloc[-DAYS_TO_FORECAST + idx].values) + [y_f]
 
     # Add last n entries - forecast rows
-    expected_data = model_df_regularized_forecast.iloc[-forecast_rows:]['Adj Close']
-    forecast_data = model_df_regularized_forecast.iloc[-forecast_rows:]['Forecast']
+    expected_data = model_df_regularized_forecast.iloc[-DAYS_TO_FORECAST:]['Adj Close']
+    forecast_data = model_df_regularized_forecast.iloc[-DAYS_TO_FORECAST:]['Forecast']
 
     model_summary = {
         'confidence': model_confidence * 100,
@@ -152,13 +134,24 @@ models_summary.append(evaluate_model('Orthogonal Matching Pursuit', OrthogonalMa
 
 models_summary.append(evaluate_model('Orthogonal Matching Pursuit CV', OrthogonalMatchingPursuitCV()))
 
-for model_summary in models_summary:
+print('Models sorted by confidence')
+for model_summary in sorted(models_summary, key=itemgetter('confidence'), reverse=True):
     print('| {} | {}% | {} | {} | {} |'.format(
         model_summary['name'],
-        round(model_summary['confidence'], 2),
+        round(model_summary['confidence'], 4),
         round(model_summary['mae'], 3),
         round(model_summary['mse'], 3),
         round(model_summary['rmse'], 3),
+    ))
+
+print('Models sorted by RSME')
+for model_summary in sorted(models_summary, key=itemgetter('rmse')):
+    print('| {} | {}% | {} | {} | {} |'.format(
+        model_summary['name'],
+        round(model_summary['confidence'], 4),
+        round(model_summary['mae'], 3),
+        round(model_summary['mse'], 3),
+        round(model_summary['rmse'], 6),
     ))
 
     plt.figure()
